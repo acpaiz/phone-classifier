@@ -4,6 +4,9 @@ FROM python:3.11-slim
 # Set direktori kerja di container
 WORKDIR /app
 
+# force DNS resolution to use google DNS
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # Salin semua isi project ke dalam container
 COPY . /app
 
