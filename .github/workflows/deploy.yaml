@@ -42,12 +42,12 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/phone-predictor/web-app:${{ github.sha }}
+          tags: mlopsps08.azurecr.io/phone-predictor/web-app:${{ github.sha }}
           build-args: |
             PYTHON_VERSION=3.11
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          images: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/phone-predictor/web-app:${{ github.sha }}
+          app-name: mlops-pso-8
+          images: mlopsps08.azurecr.io/phone-predictor/web-app:${{ github.sha }}
