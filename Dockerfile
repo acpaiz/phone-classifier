@@ -4,6 +4,9 @@ FROM python:3.11-slim
 # Set direktori kerja di container
 WORKDIR /app
 
+# Install chattr
+RUN apt-get update && apt-get install -y chattr
+
 # Force DNS resolution to use google DNS
 RUN chattr -i /etc/resolv.conf && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
