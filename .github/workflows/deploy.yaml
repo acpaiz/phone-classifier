@@ -1,0 +1,44 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main  # Atau branch yang kamu gunakan untuk release
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production # Menandakan ini adalah environment production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Login to Azure (Jika menggunakan Service Principal)
+        if: ${{ secrets.AZURE_CREDENTIALS != '' }}
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/phone-predictor/web-app:${{ github.sha }}
+          build-args: |
+            PYTHON_VERSION=3.11
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          images: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/phone-predictor/web-app:${{ github.sha }}
