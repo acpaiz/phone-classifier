@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Azure Container Registry Login
-        uses: azure/acr-login@v1
+        uses: azure/acr-login@latest
         with:
           acr: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
 
